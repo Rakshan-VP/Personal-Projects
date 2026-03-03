@@ -1,8 +1,9 @@
+import os
 import sys
 import sqlite3
 from datetime import datetime
 from collections import defaultdict
-
+from PIL import Image
 from PyQt5.QtWidgets import (
     QApplication, QWidget, QVBoxLayout, QHBoxLayout,
     QLabel, QLineEdit, QPushButton, QComboBox,
@@ -11,10 +12,15 @@ from PyQt5.QtWidgets import (
     QGroupBox
 )
 from PyQt5.QtCore import QDate, Qt
-from PyQt5.QtGui import QFont, QColor
+from PyQt5.QtGui import QFont, QColor, QIcon
 from PyQt5.QtWidgets import QHeaderView
 
 import pyqtgraph as pg
+
+def resource_path(relative_path):
+    if hasattr(sys, '_MEIPASS'):
+        return os.path.join(sys._MEIPASS, relative_path)
+    return os.path.join(os.path.abspath("."), relative_path)
 
 DB_NAME = "expenses.db"
 
@@ -84,6 +90,7 @@ class ExpenseTracker(QWidget):
 
         self.current_mode = "category"
         self.selected_category = None
+        self.setWindowIcon(QIcon(resource_path("expense.png")))
 
         self.init_db()
         self.init_ui()
