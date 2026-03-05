@@ -3,7 +3,6 @@ import sys
 import sqlite3
 from datetime import datetime
 from collections import defaultdict
-from PIL import Image
 from PyQt5.QtWidgets import (
     QApplication, QWidget, QVBoxLayout, QHBoxLayout,
     QLabel, QLineEdit, QPushButton, QComboBox,
@@ -40,11 +39,14 @@ class DetailWindow(QDialog):
         self.table.setHorizontalHeaderLabels(
             ["ID", "Date", "Category", "Place", "Amount"]
         )
+        rows = sorted(rows, key=lambda x: x[3], reverse=True)
         self.table.setRowCount(len(rows))
 
         for r, row in enumerate(rows):
             self.table.setItem(r, 0, QTableWidgetItem(str(row[0])))
-            self.table.setItem(r, 1, QTableWidgetItem(str(row[3])))
+            date_obj = datetime.strptime(row[3], "%Y-%m-%d")
+            formatted_date = date_obj.strftime("%d-%m-%y")
+            self.table.setItem(r, 1, QTableWidgetItem(formatted_date))
             self.table.setItem(r, 2, QTableWidgetItem(str(row[1])))
             self.table.setItem(r, 3, QTableWidgetItem(str(row[2])))
             self.table.setItem(r, 4, QTableWidgetItem(str(row[4])))
